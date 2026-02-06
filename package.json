@@ -1,0 +1,35 @@
+{
+  "name": "changli-oj",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "next dev -p 3003",
+    "dev:clean": "bash scripts/dev-clean.sh",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "worker": "node --env-file .env.local worker/parse-worker.cjs"
+  },
+  "dependencies": {
+    "@monaco-editor/react": "^4.6.0",
+    "@supabase/supabase-js": "^2.49.1",
+    "bullmq": "^5.10.5",
+    "bcryptjs": "^2.4.3",
+    "cheerio": "^1.0.0-rc.12",
+    "clsx": "^2.1.1",
+    "jose": "^5.8.0",
+    "ioredis": "^5.4.1",
+    "next": "14.2.5",
+    "react": "18.3.1",
+    "react-dom": "18.3.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.12.7",
+    "@types/bcryptjs": "^2.4.2",
+    "@types/react": "^18.2.79",
+    "@types/react-dom": "^18.2.25",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.6.3"
+  }
+}
