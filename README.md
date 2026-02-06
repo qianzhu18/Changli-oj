@@ -93,12 +93,14 @@ npm run worker
 
 - 注册与登录都需要：`邮箱 + 密码 + 6位邮箱验证码`
 - 前端页面已内置“发送验证码”按钮与 60 秒冷却
-- 开发环境未配置邮件服务时，接口会返回 `devCode` 便于本地调试
+- 默认必须配置邮件服务，否则接口会返回错误
 
 邮件配置（生产建议）：
 ```bash
 RESEND_API_KEY=你的Resend密钥
 EMAIL_FROM=Changli OJ <noreply@你的域名>
+# 可选：仅本地临时调试时开启（会在服务端日志输出验证码）
+ALLOW_DEV_CODE_FALLBACK=false
 ```
 
 ## 📚 文档导航

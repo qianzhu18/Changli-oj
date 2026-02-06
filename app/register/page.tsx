@@ -30,15 +30,12 @@ export default function RegisterPage() {
     setError('');
     setNotice('');
     try {
-      const data = await apiFetch<{ ok: boolean; devCode?: string }>('/api/auth/send-code', {
+      await apiFetch<{ ok: boolean }>('/api/auth/send-code', {
         method: 'POST',
         body: JSON.stringify({ email, purpose: 'register' })
       });
       setCooldown(60);
-      const tips = data.devCode
-        ? `验证码已发送（开发模式验证码：${data.devCode}）`
-        : '验证码已发送，请查收邮箱';
-      setNotice(tips);
+      setNotice('验证码已发送，请查收邮箱');
     } catch (err) {
       setError(err instanceof Error ? err.message : '验证码发送失败');
     } finally {

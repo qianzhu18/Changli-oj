@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createEmailVerificationCode, EmailCodePurpose } from '@/lib/email-code';
-import { sendVerificationCodeEmail } from '@/lib/mailer';
+import { getMailServiceState, sendVerificationCodeEmail } from '@/lib/mailer';
 import { getSupabaseAdmin } from '@/lib/supabase';
 
 export const runtime = 'nodejs';
@@ -39,18 +39,21 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: '该邮箱尚未注册' }, { status: 400 });
     }
 
+    const mailState = getMailServiceState();
+    if (!mailState.ready) {
+      return NextResponse.json({ error: mailState.error }, { status: 500 });
+    }
+
     const created = await createEmailVerificationCode(email, purpose);
     if (!created.ok) {
       return NextResponse.json({ error: created.error }, { status: 429 });
     }
 
-    const mode = await sendVerificationCodeEmail(email, created.code);
-    const isDev = process.env.NODE_ENV !== 'production' && mode.mode === 'dev';
+    await sendVerificationCodeEmail(email, created.code);
 
     return NextResponse.json({
       ok: true,
-      expiresAt: created.expiresAt,
-      ...(isDev ? { devCode: created.code } : {})
+      expiresAt: created.expiresAt
     });
   } catch (err) {
     return NextResponse.json(

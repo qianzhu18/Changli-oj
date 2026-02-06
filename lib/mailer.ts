@@ -5,17 +5,40 @@ interface SendMailInput {
   text: string;
 }
 
-export async function sendMail(input: SendMailInput) {
+type MailMode = 'resend' | 'dev';
+
+export function getMailServiceState():
+  | { ready: true; mode: MailMode }
+  | { ready: false; error: string } {
   const apiKey = process.env.RESEND_API_KEY || '';
   const from = process.env.EMAIL_FROM || '';
-  const isProd = process.env.NODE_ENV === 'production';
+  const allowDevFallback = process.env.ALLOW_DEV_CODE_FALLBACK === 'true';
 
-  if (!apiKey || !from) {
-    if (isProd) {
-      throw new Error('未配置邮件服务（RESEND_API_KEY / EMAIL_FROM）');
-    }
+  if (apiKey && from) {
+    return { ready: true, mode: 'resend' };
+  }
+  if (allowDevFallback) {
+    return { ready: true, mode: 'dev' };
+  }
+
+  return {
+    ready: false,
+    error: '未配置邮件服务，请设置 RESEND_API_KEY 与 EMAIL_FROM'
+  };
+}
+
+export async function sendMail(input: SendMailInput) {
+  const state = getMailServiceState();
+  if (!state.ready) {
+    throw new Error(state.error);
+  }
+
+  if (state.mode === 'dev') {
     return { mode: 'dev' as const };
   }
+
+  const apiKey = process.env.RESEND_API_KEY || '';
+  const from = process.env.EMAIL_FROM || '';
 
   const res = await fetch('https://api.resend.com/emails', {
     method: 'POST',
@@ -51,5 +74,12 @@ export async function sendVerificationCodeEmail(email: string, code: string) {
       <p style="margin:0;color:#475569">如果不是你本人操作，请忽略此邮件。</p>
     </div>
   `;
-  return sendMail({ to: email, subject, html, text });
+  const result = await sendMail({ to: email, subject, html, text });
+
+  if (result.mode === 'dev') {
+    // Local-only fallback for debugging when ALLOW_DEV_CODE_FALLBACK=true
+    console.log(`[DEV_EMAIL_CODE] to=${email} code=${code}`);
+  }
+
+  return result;
 }

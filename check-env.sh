@@ -38,6 +38,16 @@ check_var "REDIS_URL"
 
 echo ""
 
+# 邮件配置检查（登录/注册验证码）
+if [ -z "${RESEND_API_KEY:-}" ] || [ -z "${EMAIL_FROM:-}" ]; then
+    echo "⚠️  邮件服务未完整配置（RESEND_API_KEY / EMAIL_FROM）"
+    echo "   登录/注册发送验证码将失败"
+else
+    echo "✅ 邮件服务配置已检测到"
+fi
+
+echo ""
+
 # 检查 Redis 连接
 if command -v redis-cli &> /dev/null; then
     echo "🔍 检查 Redis 连接..."
