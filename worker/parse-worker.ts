@@ -1,11 +1,8 @@
-import dotenv from 'dotenv';
 import { Worker } from 'bullmq';
 import { promises as fs } from 'fs';
 import { getRedisConnection } from '../lib/queue';
 import { getSupabaseAdmin } from '../lib/supabase';
 import { parseRawToQuestions, questionsToHtml } from '../lib/quiz-parser';
-
-dotenv.config({ path: '.env.local' });
 
 const connection = getRedisConnection();
 const supabase = getSupabaseAdmin();

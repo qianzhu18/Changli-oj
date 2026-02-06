@@ -1,5 +1,1 @@
-import { redirect } from 'next/navigation';
-
-export default function AuthIndexPage() {
-  redirect('/login');
-}
+export { default } from '@/app/login/page';

@@ -193,11 +193,17 @@ export default function QuizPage({ params }: { params: { id: string } }) {
   }, [currentIndex, total]);
 
   if (loading || !quiz || !question) {
-    return <div className="card">加载中...</div>;
+    return (
+      <div className="card">
+        <div className="skeleton skeleton-title" />
+        <div className="skeleton skeleton-line" />
+        <div className="skeleton skeleton-line short" />
+      </div>
+    );
   }
 
   return (
-    <div className="grid" style={{ gap: 24 }}>
+    <div className="grid" style={{ gap: 20 }}>
       <div className="card">
         <div className="flex space">
           <div>
@@ -213,10 +219,13 @@ export default function QuizPage({ params }: { params: { id: string } }) {
             </button>
           </div>
         </div>
+        <div className="progress-bar" style={{ marginTop: 12 }}>
+          <div style={{ width: `${total ? Math.round(((currentIndex + 1) / total) * 100) : 0}%` }} />
+        </div>
       </div>
 
       <div className="split-layout">
-        <div className="card">
+        <div className="card question-panel">
           <h3 className="section-title">题目</h3>
           <p onClick={() => setShowAnswer(true)} style={{ cursor: 'pointer' }}>
             {question.questionText}
@@ -284,7 +293,7 @@ export default function QuizPage({ params }: { params: { id: string } }) {
           </div>
         </div>
 
-        <div className="card">
+        <div className="card answer-panel">
           <h3 className="section-title">答案与解析</h3>
           {showAnswer ? (
             <>

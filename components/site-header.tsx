@@ -8,10 +8,27 @@ import { getStoredUser, logout } from '@/lib/client-auth';
 export function SiteHeader() {
   const [user, setUser] = useState<{ email: string } | null>(null);
   const pathname = usePathname();
+  const isAuthPage =
+    pathname.startsWith('/login') || pathname.startsWith('/register') || pathname.startsWith('/auth');
 
   useEffect(() => {
     setUser(getStoredUser());
   }, []);
+
+  if (isAuthPage) {
+    return (
+      <header className="header auth-header">
+        <div className="header-inner">
+          <Link className="logo" href="/">
+            畅理题库
+          </Link>
+          <div className="header-links">
+            <Link href="/">返回题库广场</Link>
+          </div>
+        </div>
+      </header>
+    );
+  }
 
   return (
     <header className="header">
@@ -31,13 +48,13 @@ export function SiteHeader() {
           </Link>
           {user ? (
             <button
-              className="button secondary"
+              className="button secondary small-button"
               onClick={() => {
                 logout();
                 setUser(null);
               }}
             >
-              退出 {user.email}
+              退出登录
             </button>
           ) : (
             <>

@@ -1,5 +1,1 @@
-import { redirect } from 'next/navigation';
-
-export default function AuthRegisterPage() {
-  redirect('/register');
-}
+export { default } from '@/app/register/page';

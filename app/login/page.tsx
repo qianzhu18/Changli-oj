@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { apiFetch, storeAuth } from '@/lib/client-auth';
+import Link from 'next/link';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -73,12 +74,12 @@ export default function LoginPage() {
   return (
     <div className="auth-layout">
       <aside className="auth-side">
-        <h2>欢迎回来</h2>
-        <p>登录后可同步进度、记录错题并使用 AI 追问能力。</p>
+        <h2>Master Your Knowledge</h2>
+        <p>进入学习空间后，题库进度、错题和 AI 追问会自动同步到你的账号。</p>
         <ul>
-          <li>JWT 会话有效期 7 天</li>
-          <li>自动保存刷题进度</li>
-          <li>错题本和报错记录跨设备同步</li>
+          <li>邮箱验证码二次校验，降低盗号风险</li>
+          <li>跨设备同步刷题记录</li>
+          <li>错题本与报错流统一管理</li>
         </ul>
       </aside>
       <div className="card">
@@ -119,10 +120,17 @@ export default function LoginPage() {
           {notice && <div className="notice success">{notice}</div>}
           {error && <div className="notice">{error}</div>}
           <button className="button" type="submit" disabled={loading}>
-            {loading ? '登录中...' : '登录'}
+            {loading ? (
+              <>
+                <span className="spinner" />
+                登录中...
+              </>
+            ) : (
+              '登录'
+            )}
           </button>
           <p className="muted">
-            还没有账号？<a href="/register">立即注册</a>
+            还没有账号？<Link href="/register">立即注册</Link>
           </p>
         </form>
       </div>

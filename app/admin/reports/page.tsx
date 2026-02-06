@@ -75,8 +75,8 @@ export default function AdminReportsPage() {
   return (
     <div className="grid" style={{ gap: 16 }}>
       <section className="hero">
-        <h1>报错反馈 / Triage</h1>
-        <p>学员反馈统一在这里处理。可以跳转到题目编辑页直接修复并写处理备注。</p>
+        <h1>报错处置台</h1>
+        <p>集中处理学员报错，支持快速跳转并记录处理备注。</p>
       </section>
       <AdminNav />
       {error && <div className="notice">{error}</div>}

@@ -106,8 +106,8 @@ export default function AdminQuizzesPage() {
   return (
     <div className="grid" style={{ gap: 16 }}>
       <section className="hero">
-        <h1>题库管理 / Pipeline</h1>
-        <p>支持上传 TXT/MD，自动解析，失败可重试并进入编辑器修复。</p>
+        <h1>题库流水线</h1>
+        <p>上传 TXT/MD 后进入自动解析，失败可重试并人工修复。</p>
       </section>
       <div className="card">
         <div className="flex space">

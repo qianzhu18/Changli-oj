@@ -79,8 +79,8 @@ export default function AdminHome() {
   return (
     <div className="grid" style={{ gap: 16 }}>
       <section className="hero">
-        <h1>管理面板 / Content Operations</h1>
-        <p>上传后自动解析，审核后发布。这里提供待发布、解析中、失败题库的快速入口。</p>
+        <h1>管理工作台</h1>
+        <p>上传、解析、复核、发布一条链路完成。</p>
       </section>
       <AdminNav />
       {message && <div className="notice">{message}</div>}

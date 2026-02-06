@@ -25,8 +25,8 @@ export default function AdminStatsPage() {
   return (
     <div className="grid" style={{ gap: 16 }}>
       <section className="hero">
-        <h1>数据统计 / Analytics</h1>
-        <p>追踪整体题库规模、刷题活跃度和热门题库，辅助内容迭代。</p>
+        <h1>运营统计</h1>
+        <p>追踪题库规模、刷题活跃度与热门题库。</p>
       </section>
       <AdminNav />
       {error && <div className="notice">{error}</div>}

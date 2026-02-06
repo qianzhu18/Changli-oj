@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { apiFetch, storeAuth } from '@/lib/client-auth';
+import Link from 'next/link';
 
 export default function RegisterPage() {
   const [email, setEmail] = useState('');
@@ -78,11 +79,11 @@ export default function RegisterPage() {
   return (
     <div className="auth-layout">
       <aside className="auth-side">
-        <h2>创建学习账号</h2>
-        <p>注册后可直接进入题库广场，系统会记录你的进度和错题历史。</p>
+        <h2>Build Your Practice Archive</h2>
+        <p>创建账号后可持续沉淀错题与进度，构建自己的长期备考数据库。</p>
         <ul>
-          <li>支持邮箱快速注册</li>
-          <li>数据落地 Supabase</li>
+          <li>邮箱验证码注册，防止恶意占用</li>
+          <li>数据落地 Supabase 持久化</li>
           <li>支持 AI 对话追问（按日限额）</li>
         </ul>
       </aside>
@@ -128,10 +129,17 @@ export default function RegisterPage() {
           {notice && <div className="notice success">{notice}</div>}
           {error && <div className="notice">{error}</div>}
           <button className="button" type="submit" disabled={loading}>
-            {loading ? '注册中...' : '注册'}
+            {loading ? (
+              <>
+                <span className="spinner" />
+                注册中...
+              </>
+            ) : (
+              '注册'
+            )}
           </button>
           <p className="muted">
-            已有账号？<a href="/login">去登录</a>
+            已有账号？<Link href="/login">去登录</Link>
           </p>
         </form>
       </div>

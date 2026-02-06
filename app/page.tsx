@@ -27,23 +27,31 @@ export default function HomePage() {
   const [search, setSearch] = useState('');
   const [subject, setSubject] = useState('');
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
   useEffect(() => {
     const load = async () => {
       setLoading(true);
-      const params = new URLSearchParams();
-      if (search) params.set('search', search);
-      if (subject) params.set('subject', subject);
-      const data = await apiFetch<{ quizzes: Quiz[] }>(`/api/quizzes?${params.toString()}`);
-      setQuizzes(data.quizzes);
-      const user = getStoredUser();
-      if (user) {
-        const progressData = await apiFetch<{ progress: Progress[] }>('/api/progress');
-        const map: Record<string, Progress> = {};
-        progressData.progress.forEach((item) => {
-          map[item.quiz_id] = item;
-        });
-        setProgress(map);
+      setError('');
+      try {
+        const params = new URLSearchParams();
+        if (search) params.set('search', search);
+        if (subject) params.set('subject', subject);
+        const data = await apiFetch<{ quizzes: Quiz[] }>(`/api/quizzes?${params.toString()}`);
+        setQuizzes(data.quizzes);
+        const user = getStoredUser();
+        if (user) {
+          const progressData = await apiFetch<{ progress: Progress[] }>('/api/progress');
+          const map: Record<string, Progress> = {};
+          progressData.progress.forEach((item) => {
+            map[item.quiz_id] = item;
+          });
+          setProgress(map);
+        } else {
+          setProgress({});
+        }
+      } catch (err) {
+        setError(err instanceof Error ? err.message : '加载题库失败');
       }
       setLoading(false);
     };
@@ -68,8 +76,8 @@ export default function HomePage() {
   return (
     <div className="grid" style={{ gap: 18 }}>
       <section className="hero">
-        <h1>题库广场 / Practice Workspace</h1>
-        <p>发布后题库会自动出现在这里。支持检索、按科目筛选、从历史进度继续刷题。</p>
+        <h1>题库广场</h1>
+        <p>按科目检索，按进度续学。每个题库支持错题沉淀与 AI 追问。</p>
         <div className="hero-grid">
           <div className="metric">
             <span className="value">{quizzes.length}</span>
@@ -88,13 +96,13 @@ export default function HomePage() {
 
       <div className="card">
         <div className="flex space">
-          <h2 className="section-title">筛选与搜索</h2>
-          <span className="badge">实时筛选</span>
+          <h2 className="section-title">筛选条件</h2>
+          <span className="badge">实时更新</span>
         </div>
         <div className="grid two" style={{ marginTop: 10 }}>
           <input
             className="input"
-            placeholder="输入题库名称关键字"
+            placeholder="搜索题库名称"
             value={search}
             onChange={(event) => setSearch(event.target.value)}
           />
@@ -108,9 +116,19 @@ export default function HomePage() {
           </select>
         </div>
       </div>
+      {error && <div className="notice">{error}</div>}
 
       {loading ? (
-        <div className="card">正在加载题库...</div>
+        <div className="grid two">
+          {Array.from({ length: 4 }).map((_, idx) => (
+            <div className="card" key={idx}>
+              <div className="skeleton skeleton-title" />
+              <div className="skeleton skeleton-line" />
+              <div className="skeleton skeleton-line short" />
+              <div className="skeleton skeleton-button" />
+            </div>
+          ))}
+        </div>
       ) : quizzes.length ? (
         <div className="grid two">
           {quizzes.map((quiz) => (

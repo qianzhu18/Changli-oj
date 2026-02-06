@@ -14,14 +14,23 @@ export interface QuizCardProps {
 
 export function QuizCard(props: QuizCardProps) {
   const updated = props.updatedAt ? new Date(props.updatedAt).toLocaleDateString() : '-';
+  const difficultyLabel = props.difficulty || '未标注';
+  const progressRate =
+    props.progress && props.questionCount
+      ? Math.min(100, Math.round((props.progress.completedCount / Number(props.questionCount || 1)) * 100))
+      : 0;
+
   return (
-    <div className="card">
-      <div className="flex space">
-        <div>
-          <h3 className="section-title">{props.title}</h3>
+    <article className="card quiz-card">
+      <div className="quiz-card-head">
+        <div className="quiz-card-title-wrap">
+          <h3 className="quiz-card-title">{props.title}</h3>
           <p className="muted">{props.description || '暂无描述'}</p>
         </div>
-        <span className="badge">{props.difficulty || '未知难度'}</span>
+        <span className="badge difficulty-chip">
+          <span className="difficulty-dot" />
+          {difficultyLabel}
+        </span>
       </div>
       <div className="pill-list" style={{ marginTop: 12 }}>
         {props.subject && <span className="tag">{props.subject}</span>}
@@ -29,6 +38,14 @@ export function QuizCard(props: QuizCardProps) {
         <span className="tag">题量 {props.questionCount ?? 0}</span>
         <span className="tag">更新 {updated}</span>
       </div>
+      <div className="progress-bar" style={{ marginTop: 16 }}>
+        <div style={{ width: `${progressRate}%` }} />
+      </div>
+      <p className="muted small" style={{ marginTop: 6 }}>
+        {props.progress
+          ? `已完成 ${props.progress.completedCount} 题 · 当前第 ${props.progress.currentIndex + 1} 题`
+          : '尚未开始，支持断点续学'}
+      </p>
       <div className="footer-actions">
         {props.progress ? (
           <Link className="button accent" href={`/quiz/${props.id}?continue=true`}>
@@ -40,6 +57,6 @@ export function QuizCard(props: QuizCardProps) {
           </Link>
         )}
       </div>
-    </div>
+    </article>
   );
 }
